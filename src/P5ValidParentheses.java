@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class P5ValidParentheses {
 
@@ -24,6 +25,8 @@ public class P5ValidParentheses {
         Output: false
     **/
 
+        // Thease are valied for bellow scenarios
+        // but the correct answer is using stack is below
         String s = "()";
         boolean result1 = isValid(s);
         System.out.println(result1);
@@ -37,11 +40,63 @@ public class P5ValidParentheses {
         System.out.println(result3);
 
 
+        // but the correct answer is using stack is below
+        s = "()";
+        boolean result4 = isValidWithStack(s);
+        System.out.println("with stack: " + result4);
 
+        s = "()[]{}";
+        boolean result5 = isValidWithStack(s);
+        System.out.println("with stack: " + result5);
+
+        s = "(]";
+        boolean result6 = isValidWithStack(s);
+        System.out.println("with stack: " + result6);
+
+        String expression1 = "({[]})";
+        boolean result7 = isValidWithStack(expression1);
+        System.out.println("with stack: " + result7);
+
+        String expression2 = "({[}])";
+        boolean result8 = isValidWithStack(expression2);
+        System.out.println("with stack: " + result8);
 
     }
 
-    public static boolean isValid(String s) {
+    private static boolean isMatchingPair(char opening, char closing) {
+        return (opening == '(' && closing == ')') ||
+                (opening == '{' && closing == '}') ||
+                (opening == '[' && closing == ']');
+    }
+
+    public static boolean isValidWithStack(String s) {
+        //1.Use a stack of characters.
+        //2.When you encounter an opening bracket, push it to the top of the stack.
+        //3.When you encounter a closing bracket, check if the top of the stack was the opening for it.
+        //If yes, pop it from the stack. Otherwise, return false.
+
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            Character ch = s.charAt(i);
+            if (ch == '(' || ch == '{' || ch == '[') {
+                stack.push(ch);
+            } else if (ch == ')' || ch == '}' || ch == ']') {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                char top = stack.pop();
+                if (!isMatchingPair(top, ch)) {
+                    return false;
+                }
+            }
+
+        }
+
+        return stack.isEmpty();
+    }
+
+        public static boolean isValid(String s) {
         // "()[]{}"
         // 1. need to split to an array
         // 2. in a loop
